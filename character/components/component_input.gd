@@ -23,6 +23,7 @@ func print_parent_parent_isnt_character_error() -> void:
 func _ready():
 	if not get_parent().get_parent() is Character:
 		print_parent_parent_isnt_character_error()
+	
 
 
 func player_index() -> int:
@@ -38,12 +39,11 @@ func player_index() -> int:
 
 
 func action(name : String) -> String:
-	return "player" + str(player_index()) + "_" + name
+	return EventSetting.action(player_index(), name)
 
 
 func set_action(name : String) -> void:
-	if not InputMap.has_action(action(name)):
-		InputMap.add_action(action(name))
+	EventSetting.set_action(player_index(), name)
 
 
 
