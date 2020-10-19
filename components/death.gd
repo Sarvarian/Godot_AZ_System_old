@@ -1,4 +1,4 @@
-extends CharacterComponent
+extends Component
 
 
 class_name Death

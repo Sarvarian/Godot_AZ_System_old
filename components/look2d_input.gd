@@ -1,4 +1,4 @@
-extends ComponentInput
+extends Input
 
 
 class_name Look2DInput
