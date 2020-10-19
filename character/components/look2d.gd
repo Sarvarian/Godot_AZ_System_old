@@ -9,7 +9,8 @@ enum State {FORWARD, DIRECTION, MOUSE, TARGET}
 
 export(NodePath) var camera2d_path
 export(NodePath) var move2d_path
-export(int, 10000, 1000000) var speed : int = 100000
+export(int, 10000, 1000000) var speed : int = 100000 # Use for RigidBody2D
+export(float, 0, 1) var weight : float = .1 # Use for Node2D
 export(State) var state : int = State.FORWARD
 export var angular_damp : float = 6
 
@@ -20,10 +21,19 @@ var cam2d : Camera2D = null
 var move2d : Move2D = null
 
 
+
+func look_dir() -> Vector2:
+	if persist_dir != Vector2.ZERO:
+		return persist_dir
+	else:
+		return frame_dir
+
+
 func _ready() -> void:
 	find_cam2d()
 	find_move2d()
-	get_parent().angular_damp = angular_damp
+	if get_parent() is RigidBody2D:
+		get_parent().angular_damp = angular_damp
 	pass
 
 
@@ -46,15 +56,12 @@ func find_move2d() -> void:
 
 
 func _physics_process(delta : float) -> void:
-	get_parent().apply_torque_impulse(rotang() * speed * speed_filter * delta)
+	if get_parent() is RigidBody2D:
+		if get_parent().sleeping and look_dir() != Vector2.ZERO: get_parent().sleeping = false
+		get_parent().apply_torque_impulse(rotang() * speed * speed_filter * delta)
+	elif get_parent() is Node2D:
+		get_parent().rotate(lerp_angle(0, rotang(), weight))
 	frame_dir = Vector2.ZERO
-
-
-func look_dir() -> Vector2:
-	if persist_dir != Vector2.ZERO:
-		return persist_dir
-	else:
-		return frame_dir
 
 
 ###################
@@ -69,9 +76,23 @@ const M : int = State.MOUSE
 const T : int = State.TARGET
 
 func rotang() -> float:
-	var cr : bool = cam2d.rotating
-	var ms : int = move2d.state
-	var ls : int = state
+	var cr : bool # cam2d.rotating
+	var ms : int  # move2d.state
+	var ls : int  # look2d.state
+	
+	if cam2d:
+		cr = cam2d.rotating
+	else:
+		cr = false
+	
+	if move2d:
+		ms = move2d.state
+		ls = state
+	else:
+		ms = Move2D.State.INDEPENDENT
+		if ls == State.FORWARD:
+			ls = State.DIRECTION
+	
 	
 	
 	match cr:
@@ -110,7 +131,6 @@ func IDF() -> float:
 
 func IDD() -> float:
 	if look_dir() == Vector2.ZERO: return .0
-	print(frame_dir)
 	return get_parent().get_angle_to(get_parent().global_position + look_dir())
 
 

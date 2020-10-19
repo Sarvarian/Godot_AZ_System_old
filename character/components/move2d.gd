@@ -20,7 +20,8 @@ var cam2d : Camera2D = null
 
 func _ready() -> void:
 	find_cam2d()
-	get_parent().linear_damp = linear_dump
+	if get_parent() is RigidBody2D:
+		get_parent().linear_damp = linear_dump
 	pass
 
 
@@ -37,14 +38,19 @@ func _physics_process(delta : float) -> void:
 	var dir : Vector2 = direction()
 	if dir.length_squared() > 1: dir = dir.normalized()
 	var vel : Vector2 = dir * speed * speed_filter * delta
-	get_parent().apply_central_impulse(vel)
+	if get_parent() is RigidBody2D:
+		get_parent().apply_central_impulse(vel)
+	elif get_parent() is KinematicBody2D:
+		get_parent().move_and_slide(vel*9)
+	elif get_parent() is Node2D:
+		get_parent().global_position += vel*.15
 	frame_dir = Vector2.ZERO
 
 
 func direction() -> Vector2:
 	var dir : Vector2 = Vector2.ZERO
 	var md : Vector2 = move_dir()
-	if state == State.LOOK_DEPENDENT:
+	if get_parent() is Node2D and state == State.LOOK_DEPENDENT:
 		dir.x = -md.y
 		dir = dir.rotated(get_parent().global_rotation)
 	elif cam2d and cam2d.current and cam2d.rotating:

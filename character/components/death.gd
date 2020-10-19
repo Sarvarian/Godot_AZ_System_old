@@ -55,6 +55,8 @@ func add_anim_to_animplr() -> void:
 func die() -> void:
 	if animplr:
 		animplr.play(anim_name)
+	else:
+		call_after_death()
 
 
 func call_after_death() -> void:
