@@ -21,21 +21,15 @@ func print_parent_parent_isnt_character_error() -> void:
 
 
 func _ready():
-	if not get_parent().get_parent() is Character:
-		print_parent_parent_isnt_character_error()
-	
+	if not get_parent().get_parent().has_method("get_player_index"):
+			print_parent_parent_isnt_character_error()
 
 
 func player_index() -> int:
-	var pp : Character = get_parent().get_parent() as Character
-	if pp:
-		if pp.player_index < 0:
-			return pp.get_index()
-		else:
-			return pp.player_index
-	else:
-		print_parent_parent_isnt_character_error()
-		return get_parent().get_parent().get_index()
+	if get_parent().get_parent().has_method("get_player_index"):
+		if not get_parent().get_parent().get_player_index() < 0:
+			return get_parent().get_parent().get_player_index()
+	return get_parent().get_parent().get_index()
 
 
 func action(name : String) -> String:
