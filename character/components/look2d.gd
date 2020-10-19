@@ -19,7 +19,7 @@ var frame_dir : Vector2 = Vector2.ZERO
 var persist_dir : Vector2 = Vector2.ZERO
 var cam2d : Camera2D = null
 var move2d : Move2D = null
-
+var target : Node2D = null
 
 
 func look_dir() -> Vector2:
@@ -141,11 +141,10 @@ func IDM() -> float:
 
 
 func IDT() -> float: # TODO: needs targeting
-	return .0
-#	if not c.look_target:
-#		c.look_state = System.LookState.DIRECTION
-#		return .0
-#	return c.get_angle_to(c.look_target.global_position)
+	if not target:
+		state = State.DIRECTION
+		return .0
+	return get_parent().get_angle_to(target.global_position)
 
 
 # TODO Test, Analyze and Fix the Potential BUGs
