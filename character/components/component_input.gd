@@ -16,13 +16,13 @@ func print_an_error(message) -> void:
 		)
 
 
-func print_parent_parent_isnt_character_error() -> void:
-	print_an_error("I am a ComponentInput but parent of my parent is not a Character")
+func print_parent_parent_dosnthave_playerindex_error() -> void:
+	print_an_error("I am a ComponentInput but parent of my parent doesnt have player_index")
 
 
 func _ready():
 	if not get_parent().get_parent().has_method("get_player_index"):
-			print_parent_parent_isnt_character_error()
+			print_parent_parent_dosnthave_playerindex_error()
 
 
 func player_index() -> int:
