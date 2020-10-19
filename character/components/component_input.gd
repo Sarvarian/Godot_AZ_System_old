@@ -39,11 +39,11 @@ func player_index() -> int:
 
 
 func action(name : String) -> String:
-	return EventSetting.action(player_index(), name)
+	return EventSetting.action(name, player_index())
 
 
 func set_action(name : String) -> void:
-	EventSetting.set_action(player_index(), name)
+	EventSetting.set_action(name, player_index())
 
 
 

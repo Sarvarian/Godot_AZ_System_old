@@ -8,8 +8,9 @@ enum State {INDEPENDENT, LOOK_DEPENDENT}
 
 
 export(NodePath) var camera2d_path
-export(int) var speed : int = 4000
+export(int, 100, 10000) var speed : int = 4000
 export(State) var state : int = State.INDEPENDENT
+export var linear_dump : int = 6
 
 var speed_filter : float = 1
 var frame_dir : Vector2 = Vector2.ZERO
@@ -19,6 +20,7 @@ var cam2d : Camera2D = null
 
 func _ready() -> void:
 	find_cam2d()
+	get_parent().linear_damp = linear_dump
 	pass
 
 
