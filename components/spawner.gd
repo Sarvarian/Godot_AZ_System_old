@@ -39,7 +39,6 @@ func spawn() -> void:
 	next_indexes.remove(0)
 	set_next_index()
 #	print(index_history, " / ", index, " / ", next_indexes) # DEBUG
-	index_history.push_back(index)
 	add_child(scenes[index].instance())
 
 
