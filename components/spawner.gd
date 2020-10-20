@@ -17,12 +17,15 @@ var next_indexes : PoolIntArray = []
 
 
 func _ready() -> void:
+	rng.randomize()
+#	rng.set_seed(int(OS.get_unique_id()))
+
 	if future_limit <= 0: future_limit = 1
 	for _i in range(repeat_limit + future_limit):
 		index_history.append(-1)
 	for _i in range(future_limit):
 		set_next_index()
-	rng.set_seed(int(OS.get_unique_id()))
+
 
 
 func _physics_process(delta : float):
